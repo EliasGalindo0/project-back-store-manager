@@ -4,11 +4,11 @@
     "colId": "a82ce238-96ef-489e-9a28-688b8b66a47d",
     "containerId": "",
     "name": "GET",
-    "url": "localhost:3000/products/",
+    "url": "localhost:3000/products/asd",
     "method": "GET",
     "sortNum": 10000,
     "created": "2022-06-29T21:35:32.610Z",
-    "modified": "2022-07-04T01:08:49.470Z",
+    "modified": "2022-07-05T18:37:01.771Z",
     "headers": [],
     "params": [],
     "tests": []
@@ -22,12 +22,12 @@
     "method": "POST",
     "sortNum": 20000,
     "created": "2022-07-03T19:35:52.338Z",
-    "modified": "2022-07-05T00:07:05.434Z",
+    "modified": "2022-07-05T19:34:25.120Z",
     "headers": [],
     "params": [],
     "body": {
       "type": "json",
-      "raw": "  {\n    \"name\": \"Produto1\"\n  }",
+      "raw": "  {\n    \n  }",
       "form": []
     },
     "tests": []

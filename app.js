@@ -1,6 +1,8 @@
 const express = require('express');
+const errorNotFound = require('./middlewares/errorNotFound');
 require('express-async-errors');
 const productsRoutes = require('./routes/productsRoutes');
+const errorValidation = require('./middlewares/errorValidation');
 
 const app = express();
 app.use(express.json());
@@ -12,18 +14,8 @@ app.get('/', (_request, response) => {
 
 app.use('/products', productsRoutes);
 
-// app.use((err, _req, res, _next) => {
-//   switch (err.name) {
-//     case 'throwError':
-//       res.status(400).json({ message: err.message });
-//       break;
-//     case 'NotFoundError':
-//       res.status(404).json({ message: 'Product not found' });
-//       break;
-//     default:
-//       res.status(500).json({ message: err.message });
-//   }
-// });
+app.use(errorValidation, errorNotFound, (err, _req, res, _next) =>
+  res.status(500).json({ message: 'Internal server error' }));
 
 // não remova essa exportação, é para o avaliador funcionar
 // você pode registrar suas rotas normalmente, como o exemplo acima

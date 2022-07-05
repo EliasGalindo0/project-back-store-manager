@@ -5,8 +5,20 @@ const validatorSchema = require('./validatorSchema');
 
 const productsServices = {
   validateBodyAdd: validatorSchema(Joi.object({
-    name: Joi.string().required(),
+    name: Joi.string().required().min(5),
+  }).messages({ 
+    'any.required': '{{#label}} is required',
+    'string.empty': '{{#label}} is required',
+    'string.min': '{{#label}} length must be at least 5 characters long',
   })),
+
+  async validateParamsId(value) {
+    const schema = Joi.object({
+      id: Joi.number().required().positive().integer(),
+    });
+    const result = await schema.validateAsync(value);
+    return result;
+  },
 
   async checkIfExists(id) {
     const exists = await productsModel.exists(id);
@@ -30,15 +42,6 @@ const productsServices = {
     const id = await productsModel.add(insertId);
     return id;
   },
-
-  async validateParamsId(value) {
-    const schema = Joi.object({
-      id: Joi.number().required().positive().integer(),
-    });
-    const result = await schema.validateAsync(value);
-    return result;
-  },
-
 };
 
 module.exports = productsServices;
