@@ -1,5 +1,4 @@
 const Joi = require('joi');
-// const { NotFoundError } = require('../middlewares/errorHandler');
 const productsModel = require('../models/productsModels');
 const validatorSchema = require('./validatorSchema');
 
@@ -19,13 +18,6 @@ const productsServices = {
     const result = await schema.validateAsync(value);
     return result;
   },
-
-  // async checkIfExists(id) {
-  //   const exists = await productsModel.exists(id);
-  //   if (!exists) {
-  //     throw new NotFoundError(id);
-  //   }
-  // },
 
   async listAllProducts() {
     const products = await productsModel.list();

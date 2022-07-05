@@ -1,6 +1,6 @@
 const express = require('express');
-const errorNotFound = require('./middlewares/errorNotFound');
 require('express-async-errors');
+const errorNotFound = require('./middlewares/errorNotFound');
 const productsRoutes = require('./routes/productsRoutes');
 const errorValidation = require('./middlewares/errorValidation');
 
