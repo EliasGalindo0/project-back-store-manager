@@ -1,5 +1,5 @@
 const express = require('express');
-// require('express-async-errors');
+require('express-async-errors');
 const productsRoutes = require('./routes/productsRoutes');
 
 const app = express();
@@ -18,7 +18,7 @@ app.use('/products', productsRoutes);
 //       res.status(400).json({ message: err.message });
 //       break;
 //     case 'NotFoundError':
-//       res.status(404).json({ message: err.message });
+//       res.status(404).json({ message: 'Product not found' });
 //       break;
 //     default:
 //       res.status(500).json({ message: err.message });
