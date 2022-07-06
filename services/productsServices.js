@@ -1,16 +1,18 @@
 const Joi = require('joi');
-// const { NotFoundError } = require('../middlewares/errorHandler');
 const productsModel = require('../models/productsModels');
-const validatorSchema = require('./validatorSchema');
 
 const productsServices = {
-  validateBodyAdd: validatorSchema(Joi.object({
-    name: Joi.string().required().min(5),
-  }).messages({ 
-    'any.required': '{{#label}} is required',
-    'string.empty': '{{#label}} is required',
-    'string.min': '{{#label}} length must be at least 5 characters long',
-  })),
+  async validateBodyAdd(value) {
+    const schema = Joi.object({
+      name: Joi.string().required().min(5),
+    }).messages({
+      'any.required': '{{#label}} is required',
+      'string.empty': '{{#label}} is required',
+      'string.min': '{{#label}} length must be at least 5 characters long',
+    });
+    const result = await schema.validateAsync(value);
+    return result;
+  },
 
   async validateParamsId(value) {
     const schema = Joi.object({
