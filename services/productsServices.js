@@ -1,26 +1,19 @@
 const Joi = require('joi');
 const productsModel = require('../models/productsModels');
+const { runSchema } = require('./utils');
 
 const productsServices = {
-  async validateBodyAdd(value) {
-    const schema = Joi.object({
-      name: Joi.string().required().min(5),
-    }).messages({
-      'any.required': '{{#label}} is required',
-      'string.empty': '{{#label}} is required',
-      'string.min': '{{#label}} length must be at least 5 characters long',
-    });
-    const result = await schema.validateAsync(value);
-    return result;
-  },
+  validateBodyAdd: runSchema(Joi.object({
+    name: Joi.string().required().min(5),
+  }).messages({
+    'any.required': '{{#label}} is required',
+    'string.empty': '{{#label}} is required',
+    'string.min': '{{#label}} length must be at least 5 characters long',
+  })),
 
-  async validateParamsId(value) {
-    const schema = Joi.object({
-      id: Joi.number().required().positive().integer(),
-    });
-    const result = await schema.validateAsync(value);
-    return result;
-  },
+  validateParamsId: runSchema(Joi.object({
+    id: Joi.number().required().positive().integer(),
+  })),
 
   async listAllProducts() {
     const products = await productsModel.list();

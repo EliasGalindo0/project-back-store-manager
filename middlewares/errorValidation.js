@@ -1,6 +1,5 @@
 module.exports = ((err, _req, res, next) => {
   // const { name, message } = err;
-  console.log(err.name);
   if (err.name === 'ValidationError') {
     err.details.forEach((error) => {
       switch (error.type) {
