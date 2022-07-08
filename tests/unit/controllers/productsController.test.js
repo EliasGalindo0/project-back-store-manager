@@ -6,10 +6,22 @@ chai.use(chaiAsPromised);
 
 const productsController = require('../../../controllers/productsController');
 const productsServices = require('../../../services/productsServices');
+const { makeRes } = require('./utils');
 
 describe('controller/productsController', () => {
   beforeEach(sinon.restore);
   describe('listAllProducts', () => {
+    it('deve disparar um erro caso o productServices.list também dispare', () => {
+      sinon.stub(productsServices, 'listAllProducts').rejects();
+      chai.expect(productsController.listAllProducts({}, {})).to.eventually.be.rejected;
+    })
+
+    it('deve retornar res.status 200 e res.json', async () => {
+      const res = makeRes();
+      sinon.stub(productsServices, 'listAllProducts').resolves([{ id: 1 }]);
+      await productsController.listAllProducts({}, res)
+      chai.expect(res.json.getCall(0).args[0]).to.deep.equal([{ id: 1 }]);
+    })
 
   });
 
@@ -37,10 +49,7 @@ describe('controller/productsController', () => {
     })
 
     it('deve retornar res.status 201 e res.json', async () => {
-      const res = {
-        status: sinon.stub().callsFake(() => res),
-        json: sinon.stub().returns()
-      };
+      const res = makeRes();
       sinon.stub().returns(res);
       sinon.stub().returns();
       sinon.stub(productsServices, 'validateBodyAdd').resolves();

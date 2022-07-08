@@ -37,4 +37,16 @@ describe('models/productsModel', () => {
     });
 
   });
+  describe('list', () => {
+    it('deve disparar um erro caso a consulta dispare um erro', () => {
+      sinon.stub(db, 'query').rejects();
+      chai.expect(productsModel.list(0)).to.eventually.be.rejected;
+    });
+
+    it('deve retornar uma lista caso a consulta retorne', () => {
+      sinon.stub(db, 'query').resolves([[]]);
+      chai.expect(productsModel.list()).to.eventually.deep.equal([]);
+    });
+  });
+  
   });
