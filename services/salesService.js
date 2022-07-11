@@ -24,21 +24,13 @@ const salesServices = {
   },
 
   async add(sales) {
-    const ids = sales.map((sale) => sale.productId);
-
-    const created = await salesModel.add(sales);
-
-    return { id: ids, itemsSold: created };
+    const insertSaleId = await salesModel.addToSale();
+    const newSale = sales.map(({ productId, quantity }) => (
+      salesModel.addSaleProduct(insertSaleId, productId, quantity)
+    ));
+    await Promise.all(newSale);
+    return { id: insertSaleId, itemsSold: sales };
   },
-
-  // async add(sales) {
-  //   const insertSaleId = await salesModel.addToSale();
-  //   const newSale = sales.map(({ productId, quantity }) => (
-  //     salesModel.addSaleProduct(insertSaleId, productId, quantity)
-  //   ));
-  //   const resolved = await Promise.all(newSale);
-  //   return { id: resolved, itemsSold: newSale };
-  // },
 };
 
 module.exports = salesServices;
