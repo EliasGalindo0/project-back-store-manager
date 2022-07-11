@@ -14,19 +14,18 @@ const salesModel = {
   },
 
   async addSaleProduct(saleId, productId, quantity) {
-    const sql = `INSERT INTO StoreManager.sales_products 
-    (product_id, sale_id, quantity)
-    VALUES(?,?,?);`;
-    await db.query(sql, [productId, saleId, quantity]);
-    const newSale = { productId, saleId };
-    return { newSale };
+    const sql = `
+    INSERT INTO StoreManager.sales_products (sale_id, product_id, quantity) VALUES (?, ?, ?);
+    `;
+    await db.query(sql, [saleId, productId, quantity]);
   },
 
-  async addToSale() {
+  async addSaleId() {
     const sql = 'INSERT INTO StoreManager.sales (date) VALUES (NOW());';
-    const [{ insertId: id }] = await db.query(sql);
-    console.log(id);
-    return id;
+    const saleTime = await db.query(sql);
+    const [result] = saleTime;
+    const { insertId } = result;
+    return insertId;
   },
   
 };

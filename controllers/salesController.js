@@ -18,7 +18,7 @@ const salesController = {
   async add(req, res) {
     const data = await salesService.validateBodyAdd(req.body);
     const sale = await salesService.add(data);
-    if (!sale) return res.status(404).json({ message: 'Product not found' });
+    if (!sale) return res.status(400).json({ message: 'Product not found' });
     return res.status(201).json(sale);
   },
 };

@@ -4,11 +4,11 @@
     "colId": "a82ce238-96ef-489e-9a28-688b8b66a47d",
     "containerId": "",
     "name": "GET",
-    "url": "localhost:3000/sales",
+    "url": "localhost:3000/products/a",
     "method": "GET",
     "sortNum": 10000,
     "created": "2022-06-29T21:35:32.610Z",
-    "modified": "2022-07-09T23:44:19.349Z",
+    "modified": "2022-07-11T20:06:38.765Z",
     "headers": [],
     "params": [],
     "tests": []
@@ -22,12 +22,12 @@
     "method": "POST",
     "sortNum": 20000,
     "created": "2022-07-03T19:35:52.338Z",
-    "modified": "2022-07-05T20:19:35.192Z",
+    "modified": "2022-07-11T19:56:32.403Z",
     "headers": [],
     "params": [],
     "body": {
       "type": "json",
-      "raw": "  {\n    \"name\": \"Product1\"\n  }",
+      "raw": "  {\n    \"name\": \"a\"\n  }",
       "form": []
     },
     "tests": []
@@ -38,10 +38,10 @@
     "containerId": "",
     "name": "postSales",
     "url": "localhost:3000/sales",
-    "method": "POST",
+    "method": "GET",
     "sortNum": 30000,
     "created": "2022-07-09T14:00:27.320Z",
-    "modified": "2022-07-11T16:47:29.995Z",
+    "modified": "2022-07-11T19:50:18.741Z",
     "headers": [],
     "params": [],
     "body": {
