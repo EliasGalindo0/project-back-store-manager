@@ -3,33 +3,42 @@ const salesModel = require('../models/salesModel');
 const { runSchema } = require('./utils');
 
 const salesServices = {
-  validateBodyAdd: runSchema(Joi.object({
-    name: Joi.string().required().min(5),
-  }).messages({
-    'any.required': '{{#label}} is required',
-    'string.empty': '{{#label}} is required',
-    'string.min': '{{#label}} length must be at least 5 characters long',
-  })),
+  validateBodyAdd: runSchema(Joi.array().items(Joi.object({
+    productId: Joi.number().required().positive().integer()
+      .messages({ 'any.required': '"productId" is required' }),
+    quantity: Joi.number().required().positive().integer()
+      .messages({
+        'number.positive': '"quantity" must be greater than or equal to 1',
+        'any.required': '"quantity" is required',
+      }), 
+  }))),
 
-  validateParamsId: runSchema(Joi.object({
-    id: Joi.number().required().positive().integer(),
-  })),
-
-  async listAllSales() {
+  async get() {
     const sales = await salesModel.list();
     return sales;
   },
 
-  async listSalesById(id) {
+  async list(id) {
     const sale = await salesModel.get(id);
     return sale;
   },
 
-  async addSale(data) {
-    const { ...insertId } = data;
-    const id = await salesModel.add(insertId);
-    return id;
+  async add(sales) {
+    const ids = sales.map((sale) => sale.productId);
+
+    const created = await salesModel.add(sales);
+
+    return { id: ids, itemsSold: created };
   },
+
+  // async add(sales) {
+  //   const insertSaleId = await salesModel.addToSale();
+  //   const newSale = sales.map(({ productId, quantity }) => (
+  //     salesModel.addSaleProduct(insertSaleId, productId, quantity)
+  //   ));
+  //   const resolved = await Promise.all(newSale);
+  //   return { id: resolved, itemsSold: newSale };
+  // },
 };
 
 module.exports = salesServices;

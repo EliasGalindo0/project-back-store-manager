@@ -26,7 +26,7 @@ describe('controller/productsController', () => {
   });
 
   describe('listProductById', () => {
-
+    
   });
 
   describe('addProduct', () => {

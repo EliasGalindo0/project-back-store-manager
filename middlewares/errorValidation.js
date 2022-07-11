@@ -1,5 +1,4 @@
 module.exports = ((err, _req, res, next) => {
-  // const { name, message } = err;
   if (err.name === 'ValidationError') {
     err.details.forEach((error) => {
       switch (error.type) {
@@ -9,7 +8,7 @@ module.exports = ((err, _req, res, next) => {
         case 'string.empty':
           res.status(404).json({ message: err.message });
           break;
-        case 'string.min':
+        case ('string.min', 'number.positive'):
           res.status(422).json({ message: err.message });
           break;
         default: res.status(500).json({ message: err.message });

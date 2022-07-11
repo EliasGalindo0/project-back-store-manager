@@ -30,6 +30,7 @@ const productsServices = {
     const id = await productsModel.add(insertId);
     return id;
   },
+
 };
 
 module.exports = productsServices;

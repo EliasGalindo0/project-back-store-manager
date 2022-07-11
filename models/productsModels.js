@@ -18,6 +18,7 @@ const productsModel = {
     const [{ insertId }] = await db.query(sql, [data.name]);
     return insertId;
   },
+
 };
 
 module.exports = productsModel;
