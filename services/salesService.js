@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const productsModel = require('../models/productsModels');
 const salesModel = require('../models/salesModel');
 const { runSchema } = require('./utils');
 
@@ -18,12 +19,12 @@ const salesServices = {
       .messages({
         'number.positive': '"quantity" must be greater than or equal to 1',
         'any.required': '"quantity" is required',
-      }), 
+      }),
   }))),
-
-  async get() {
-    const sales = await salesModel.list();
-    return sales;
+ 
+  async get(sales) {
+    const products = await Promise.all(sales.map((sale) => productsModel.get(sale.productId)));
+    return products.includes(undefined);
   },
 
   async list(id) {
@@ -32,12 +33,12 @@ const salesServices = {
   },
 
   async add(sales) {
-    const insertSaleId = await salesModel.addSaleId();
-    const isertIntoSalesProducts = sales.map(({ productId, quantity }) => (
-      salesModel.addSaleProduct(insertSaleId, productId, quantity)
+    const saleId = await salesModel.addSaleId();
+    const salesToAdd = sales.map(({ productId, quantity }) => (
+      salesModel.addSaleProduct(saleId, productId, quantity)
     ));
-    await Promise.all(isertIntoSalesProducts);
-    return { id: insertSaleId, itemsSold: sales };
+    await Promise.all(salesToAdd);
+    return { id: saleId, itemsSold: sales };
   },
 };
 

@@ -38,10 +38,10 @@
     "containerId": "",
     "name": "postSales",
     "url": "localhost:3000/sales",
-    "method": "GET",
+    "method": "POST",
     "sortNum": 30000,
     "created": "2022-07-09T14:00:27.320Z",
-    "modified": "2022-07-11T19:50:18.741Z",
+    "modified": "2022-07-11T23:38:59.291Z",
     "headers": [],
     "params": [],
     "body": {
