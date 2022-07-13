@@ -1,98 +1,51 @@
-// const sinon = require('sinon');
-// const { expect } = require('chai');
-// const db = require('../../../models/connection');
-// const salesModel = require('../../../models/salesModel');
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+const sinon = require('sinon');
+const db = require('../../../models/connection');
+const salesModel = require('../../../models/salesModel');
 
-// describe('models/salesModel', () => {
-//   describe('addSale', () => {
-//     beforeEach(() => {
-//       sinon.stub(db, 'query').returns([{ insertId: 3 }]);
-//     });
-//     afterEach(() => {
-//       sinon.restore();
-//     });
-//     it('deve retornar um id da venda', async () => {
-//       const response = await salesModel.addSale();
-//       expect(response).to.be.equal(3);
-//     });
-//   });
-//   describe('addSaleProduct', () => {
-//     beforeEach(() => {
-//       sinon.stub(db, 'query');
-//     });
-//     afterEach(() => {
-//       sinon.restore();
-//     });
-//     it('deve retornar as informações dos produtos adicionados', async () => {
-//       const response = await salesModel
-//         .addSaleProduct({ });
-//       expect(response).to.be.deep.equal({ });
-//     });
-//   });
-//   // describe('get', () => {
-//   //   beforeEach(() => {
-//   //     sinon.stub(db, 'query').returns([mockSalesBefore]);
-//   //   });
-//   //   afterEach(() => {
-//   //     sinon.restore();
-//   //   });
-//   //   it('should return an array', async () => {
-//   //     const response = await salesModel.getAll();
-//   //     expect(response).to.be.a('array');
-//   //   });
-//   //   it('should return an array of sales', async () => {
-//   //     const response = await salesModel.getAll();
-//   //     expect(response).to.be.deep.equal(mockSalesBefore);
-//   //   });
-//   // });
-//   // describe('The function findById', () => {
-//   //   beforeEach(() => {
-//   //     sinon.stub(db, 'query').returns([[mockSalesBefore[0]]]);
-//   //   });
-//   //   afterEach(() => {
-//   //     sinon.restore();
-//   //   });
-//   //   it('should return an array', async () => {
-//   //     const response = await salesModel.findById();
-//   //     expect(response).to.be.a('array');
-//   //   });
-//   //   it('should return an array of sales', async () => {
-//   //     const response = await salesModel.findById();
-//   //     expect(response[0]).to.be.deep.equal(mockSalesBefore[0]);
-//   //   });
-//   // });
-//   // describe('The function delete', () => {
-//   //   beforeEach(() => {
-//   //     sinon.stub(db, 'query').resolves();
-//   //   });
-//   //   afterEach(() => {
-//   //     sinon.restore();
-//   //   });
-//   //   it('should return a boolean', async () => {
-//   //     const response = await salesModel.delete(1);
-//   //     expect(response).to.be.a('boolean');
-//   //   });
-//   //   it('should return true', async () => {
-//   //     const response = await salesModel.delete(1);
-//   //     expect(response).to.be.equal(true);
-//   //   });
-//   // });
-//   // describe('The function updateSale', () => {
-//   //   beforeEach(() => {
-//   //     sinon.stub(db, 'query').resolves();
-//   //   });
-//   //   afterEach(() => {
-//   //     sinon.restore();
-//   //   });
-//   //   it('returns an object', async () => {
-//   //     const response = await salesModel
-//   //       .updateSale({ id: 1, productId: 1, quantity: 1 });
-//   //     expect(response).to.be.a('object');
-//   //   });
-//   //   it('the object must have the productId and the quantity', async () => {
-//   //     const response = await salesModel
-//   //       .updateSale({ id: 1, productId: 1, quantity: 1 });
-//   //     expect(response).to.be.deep.equal({ productId: 1, quantity: 1 });
-//   //   });
-//   // });
-// });
+chai.use(chaiAsPromised);
+
+describe('models/salesModel', () => {
+  beforeEach(sinon.restore)
+  describe('get', () => {
+    it('deve disparar um erro caso a consulta dispare um erro', () => {
+      sinon.stub(db, 'query').rejects();
+      chai.expect(salesModel.getById(0)).to.eventually.be.rejected;
+    });
+
+    it('deve retornar uma lista vazia caso a consulta não retorne nenhum produto', () => {
+      sinon.stub(db, 'query').resolves([[]]);
+      chai.expect(salesModel.getById(0)).to.eventually.be.undefined;
+    });
+
+    it('deve retornar um objeto caso a consulta retorne um produto', () => {
+      sinon.stub(db, 'query').resolves([[{}]]);
+      chai.expect(salesModel.getById(0)).to.eventually.deep.equal({});
+    });
+
+  });
+  describe('addSalesProduct', () => {
+    it('deve disparar um erro caso a consulta dispare um erro', () => {
+      sinon.stub(db, 'query').rejects();
+      chai.expect(salesModel.addSaleProduct({})).to.eventually.be.rejected;
+    });
+
+    it('deve retornar um id caso a consulta retorne um produto', () => {
+      sinon.stub(db, 'query').resolves([{ insertId: 0 }]);
+      chai.expect(salesModel.getById(0)).to.eventually.equal(0);
+    });
+
+  });
+  describe('list', () => {
+    it('deve disparar um erro caso a consulta dispare um erro', () => {
+      sinon.stub(db, 'query').rejects();
+      chai.expect(salesModel.get(0)).to.eventually.be.rejected;
+    });
+
+    it('deve retornar uma lista caso a consulta retorne', () => {
+      sinon.stub(db, 'query').resolves([[]]);
+      chai.expect(salesModel.get()).to.eventually.deep.equal([]);
+    });
+  });
+});
