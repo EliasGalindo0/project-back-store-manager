@@ -21,5 +21,18 @@ const productsController = {
     const product = await productsServices.listProductById(id);
     res.status(201).json(product);
   },
-};
+
+  async remove(req, res, next) {
+    try {
+      const { id } = await productsServices.validateParamsId(req.params);
+      await productsServices.checkIfExists(id);
+      await productsServices.remove(id);
+      return res.sendStatus(204);
+    } catch (err) {
+      return err.message
+        ? res.status(err.status).json({ message: err.message }) : next(err);
+    }
+    },
+
+  };
 module.exports = productsController;

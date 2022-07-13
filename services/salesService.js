@@ -1,5 +1,6 @@
 const salesModel = require('../models/salesModel');
 const ValidateError = require('../middlewares/ValidateError');
+// const errorValidation = require('../middlewares/errorValidation');
 
 const salesServices = {
 
@@ -51,9 +52,13 @@ const salesServices = {
   },
   
   async delete(id) {
-    const exists = await salesServices.getById(id);
-    if (exists.length === 0) throw ValidateError(404, 'Sale not found');
     await salesModel.delete(id);
+  },
+
+  async checkIfExists(id) {
+    const exists = await salesModel.exists(id);
+    if (!exists) throw ValidateError(404, 'Product not found');
+    return exists;
   },
 
 };

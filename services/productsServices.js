@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const ValidateError = require('../middlewares/ValidateError');
 const productsModel = require('../models/productsModels');
 const { runSchema } = require('./utils');
 
@@ -29,6 +30,17 @@ const productsServices = {
     const { ...insertId } = data;
     const id = await productsModel.add(insertId);
     return id;
+  },
+
+  async checkIfExists(id) {
+    const exists = await productsModel.exists(id);
+    if (!exists) throw ValidateError(404, 'Product not found');
+    return exists;
+  },
+
+  async remove(id) {
+    const result = productsModel.remove(id);
+    return result;
   },
 
 };

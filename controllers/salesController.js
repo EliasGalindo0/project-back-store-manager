@@ -42,8 +42,8 @@ const salesController = {
   
   async delete(req, res, next) {
     try {
-      const { id } = req.params;
-      await salesModel.exists(id);
+      const { id } = await productsServices.validateParamsId(req.params);
+      await salesServices.exists(id);
       await salesServices.delete(id);
       res.sendStatus(204);
     } catch (err) {

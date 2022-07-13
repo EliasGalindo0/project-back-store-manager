@@ -50,7 +50,6 @@ const salesModel = {
     const query = `DELETE FROM StoreManager.sales
       WHERE id = ?;`;
     await db.query(query, [id]);
-    return true;
   },
   
   async put({ id, productId, quantity }) {
