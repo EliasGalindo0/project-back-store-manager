@@ -1,11 +1,8 @@
 const express = require('express');
-require('express-async-errors');
-const errorNotFound = require('./middlewares/errorNotFound');
-const productsRoutes = require('./routes/productsRoutes');
 const errorValidation = require('./middlewares/errorValidation');
+require('express-async-errors');
+const productsRoutes = require('./routes/productsRoutes');
 const salesRoutes = require('./routes/salesRoutes');
-const SalesError = require('./middlewares/salesError');
-// const salesValidator = require('./middlewares/salesValidator');
 
 const app = express();
 app.use(express.json());
@@ -18,7 +15,7 @@ app.get('/', (_request, response) => {
 app.use('/products', productsRoutes);
 app.use('/sales', salesRoutes);
 
-app.use(errorValidation, errorNotFound, SalesError, (err, _req, res, _next) =>
+app.use(errorValidation, (err, _req, res, _next) =>
   res.status(500).json({ message: 'Internal server error' }));
 
 // não remova essa exportação, é para o avaliador funcionar

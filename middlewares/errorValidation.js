@@ -8,11 +8,11 @@ module.exports = ((err, _req, res, next) => {
         case 'string.empty':
           res.status(404).json({ message: err.message });
           break;
-        case 'string.min' || 'number.positive':
+        case 'string.min':
           res.status(422).json({ message: err.message });
           break;
         default: res.status(500).json({ message: err.message });
       }
     });
-  } next();
+  } next(err.name);
   });

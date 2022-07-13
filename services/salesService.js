@@ -1,44 +1,34 @@
 const Joi = require('joi');
-const productsModel = require('../models/productsModels');
 const salesModel = require('../models/salesModel');
-const { runSchema } = require('./utils');
+const ValidateError = require('../middlewares/ValidateError');
+
+const schema = Joi.array().items(Joi.object({
+  productId: Joi.number().required().positive().integer()
+    .messages({ 'any.required': '"productId" is required' }),
+  quantity: Joi.number().required().positive().integer()
+    .messages({
+      'number.positive': '"quantity" must be greater than or equal to 1',
+      'any.required': '"quantity" is required',
+    }),
+}));
 
 const salesServices = {
-  validateParamsId: runSchema(Joi.object({
-    name: Joi.string().required().min(5),
-  }).messages({
-    'any.required': '{{#label}} is required',
-    'string.empty': '{{#label}} is required',
-    'string.min': '{{#label}} length must be at least 5 characters long',
-  })),
 
-  validateBodyAdd: runSchema(Joi.array().items(Joi.object({
-    productId: Joi.number().required().positive().integer()
-      .messages({ 'any.required': '"productId" is required' }),
-    quantity: Joi.number().required().positive().integer()
-      .messages({
-        'number.positive': '"quantity" must be greater than or equal to 1',
-        'any.required': '"quantity" is required',
-      }),
-  }))),
- 
-  async get(sales) {
-    const products = await Promise.all(sales.map((sale) => productsModel.get(sale.productId)));
-    return products.includes(undefined);
-  },
+  async create(body) {
+    const { error } = schema.validate(body);
+    console.log(error);
+    if (error) throw ValidateError(422, error.message);
 
-  async list(id) {
-    const sale = await salesModel.get(id);
-    return sale;
-  },
+    const saleId = await salesModel.addSale();
+    if (!saleId) throw ValidateError(404, 'Bad erquest');
 
-  async add(sales) {
-    const saleId = await salesModel.addSaleId();
-    const salesToAdd = sales.map(({ productId, quantity }) => (
-      salesModel.addSaleProduct(saleId, productId, quantity)
-    ));
-    await Promise.all(salesToAdd);
-    return { id: saleId, itemsSold: sales };
+    const products = await salesModel.exists();
+    const id = products.map((product) => product.id);
+    const bodyId = body.map((item) => item.productId);
+    const exists = bodyId.every((item) => id.includes(item));
+
+    if (!exists) throw ValidateError(404, 'Product not found');
+    return { id: saleId, itemsSold: body };
   },
 };
 

@@ -1,26 +1,25 @@
 const db = require('./connection');
 
 const salesModel = {
-  async list() {
-    const sql = 'SELECT * FROM StoreManager.sales';
-    const [sales] = await db.query(sql);
-    return sales;
-  },
 
-  async get(id) {
-    const sql = 'SELECT * from StoreManager.sales where id = ?;';
-    const [[sale]] = await db.query(sql, [id]);
-    return sale;
+  async exists() {
+    const sql = `
+      SELECT id 
+      FROM StoreManager.products
+    `;
+    const [exists] = await db.query(sql);
+    return exists;
   },
 
   async addSaleProduct(saleId, productId, quantity) {
     const sql = `
     INSERT INTO StoreManager.sales_products (sale_id, product_id, quantity) VALUES (?, ?, ?);
     `;
-    await db.query(sql, [saleId, productId, quantity]);
+    const result = await db.query(sql, [saleId, productId, quantity]);
+    return result;
   },
 
-  async addSaleId() {
+  async addSale() {
     const sql = 'INSERT INTO StoreManager.sales (date) VALUES (NOW());';
     const saleTime = await db.query(sql);
     const [result] = saleTime;
