@@ -1,3 +1,4 @@
+// const ValidateError = require('../middlewares/ValidateError');
 const salesModel = require('../models/salesModel');
 const productsServices = require('../services/productsServices');
 const salesServices = require('../services/salesService');
@@ -15,32 +16,53 @@ const salesController = {
     }
   },
 
-  async get(_req, res) {
-    const sales = await salesServices.get();
-    res.status(200).json(sales);
+  async get(_req, res, next) {
+    try {
+      const sales = await salesServices.get();
+      // if (!sales) throw ValidateError(404, 'Sale not found');
+      res.status(200).json(sales);
+    } catch (err) {
+      return err.message
+        ? res.status(err.status).json({ message: err.message }) : next(err);
+    }
   },
 
-  async getById(req, res) {
-    const { id } = await productsServices.validateParamsId(req.params);
-    const sale = await salesServices.getById(id);
-    if (!sale) return res.status(404).json({ message: 'Sale not found' });
-    res.status(200).json(sale);
+  async getById(req, res, next) {
+    try {
+      const { id } = await productsServices.validateParamsId(req.params);
+      await salesModel.exists(id);
+      const sale = await salesServices.getById(id);
+      // if (!sale) throw ValidateError(404, 'Sale not found');
+      res.status(200).json(sale);
+    } catch (err) {
+      return err.message
+        ? res.status(err.status).json({ message: err.message }) : next(err);
+    }
   },
   
-  async delete(req, res) {
-    const { id } = req.params;
-    await salesModel.exists(id);
-    if (!id) return res.status(404).json({ message: 'Sale not found' });
-    await salesServices.delete(id);
-    res.sendStatus(204);
+  async delete(req, res, next) {
+    try {
+      const { id } = req.params;
+      await salesModel.exists(id);
+      await salesServices.delete(id);
+      res.sendStatus(204);
+    } catch (err) {
+      return err.message
+        ? res.status(err.status).json({ message: err.message }) : next(err);
+    }
   },
 
-  async put(req, res) {
-    const { id } = req.params;
-    const { body } = req;
-    const { code, update, message } = await salesServices.put(id, body);
-    if (message) return res.status(code).json({ message });
-    res.status(201).json(update);
+  async put(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { body } = req;
+      const { code, update, message } = await salesServices.put(id, body);
+      if (message) return res.status(code).json({ message });
+      res.status(201).json(update);
+    } catch (err) {
+      return err.message
+        ? res.status(err.status).json({ message: err.message }) : next(err);
+    }
   },
 
 };

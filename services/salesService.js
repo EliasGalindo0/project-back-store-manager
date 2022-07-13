@@ -17,9 +17,9 @@ const salesServices = {
     if (!quantLength) {
       throw ValidateError(422, '"quantity" must be greater than or equal to 1');
     }
-    // const saleId = await salesModel.addSale();
+    const saleId = await salesModel.addSale();
 
-    const products = await salesModel.exists(validProduct);
+    const products = await salesModel.exists(saleId);
     const validId = products.map((product) => product.id);
     const bodyId = body.map((item) => item.productId);
     const exists = bodyId.every((item) => validId.includes(item));
@@ -41,7 +41,7 @@ const salesServices = {
 
   async getById(id) {
     const result = await salesModel.getById(id);
-    if (result.length === 0) return { code: 404, message: 'Sale not found' };
+    if (result.length === 0) throw ValidateError(404, 'Sale not found');
     const sale = result.map(({ date, product_id: productId, quantity }) => ({
       date,
       productId,
@@ -52,7 +52,7 @@ const salesServices = {
   
   async delete(id) {
     const exists = await salesServices.getById(id);
-    if (exists.length === 0) return { code: 404, message: 'Sale not found' };
+    if (exists.length === 0) throw ValidateError(404, 'Sale not found');
     await salesModel.delete(id);
   },
 

@@ -34,6 +34,7 @@ const salesModel = {
     const [sales] = await db.query(query);
     return sales;
   },
+  
   async getById(id) {
     const query = `SELECT sp.sale_id, sp.product_id, sp.quantity, s.date
       FROM StoreManager.sales_products AS sp
