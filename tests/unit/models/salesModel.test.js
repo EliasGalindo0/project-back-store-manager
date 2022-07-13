@@ -33,7 +33,12 @@ describe('models/salesModel', () => {
 
     it('deve retornar um id caso a consulta retorne um produto', () => {
       sinon.stub(db, 'query').resolves([{ insertId: 0 }]);
-      chai.expect(salesModel.getById(0)).to.eventually.equal(0);
+      chai.expect(salesModel.getById(0)).to.eventually.deep.equal(0);
+    });
+
+    it('deve retornar as informações caso a consulta retorne', () => {
+      sinon.stub(db, 'query').resolves({});
+      chai.expect(salesModel.addSaleProduct({})).to.eventually.deep.equal({});
     });
 
   });
@@ -44,8 +49,25 @@ describe('models/salesModel', () => {
     });
 
     it('deve retornar uma lista caso a consulta retorne', () => {
-      sinon.stub(db, 'query').resolves([[]]);
-      chai.expect(salesModel.get()).to.eventually.deep.equal([]);
+      sinon.stub(db, 'query').resolves([{}]);
+      chai.expect(salesModel.get()).to.eventually.equal({});
+    });
+  });
+  describe('exists', () => {
+    it('deve disparar um erro caso não exista o id buscado', () => {
+      sinon.stub(db, 'query').rejects();
+      chai.expect(salesModel.exists()).to.eventually.be.undefined;
+    });
+    
+    it('deve retornar uma lista caso exista o id buscado', () => {
+      sinon.stub(db, 'query').resolves([]);
+      chai.expect(salesModel.exists()).to.eventually.equal([]);
+    });
+  });
+  describe('addSale', () => {
+    it('deve retornar um id da venda realizada', () => {
+      sinon.stub(db, 'query').resolves([{ insertId: 0 }]);
+      chai.expect(salesModel.addSale(0)).to.eventually.deep.equal(0);
     });
   });
 });

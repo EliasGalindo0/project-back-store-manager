@@ -33,7 +33,7 @@ describe('models/productsModel', () => {
 
     it('deve retornar um id caso a consulta retorne um produto', () => {
       sinon.stub(db, 'query').resolves([{ insertId: 0 }]);
-      chai.expect(productsModel.get(0)).to.eventually.equal(0);
+      chai.expect(productsModel.get(0)).to.eventually.deep.equal(0);
     });
 
   });
