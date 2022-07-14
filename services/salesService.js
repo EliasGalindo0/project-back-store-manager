@@ -50,6 +50,12 @@ const salesServices = {
     await salesModel.delete(id);
   },
 
+  async put({ id, productId, quantity }) {
+    const sale = await salesModel.put({ id, productId, quantity });
+    if (!sale) throw ValidateError(404, 'Sale not found');
+      return sale;
+  },
+
 };
 
 module.exports = salesServices;
