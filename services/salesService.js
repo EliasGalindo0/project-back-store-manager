@@ -1,28 +1,27 @@
 const salesModel = require('../models/salesModel');
 const ValidateError = require('../middlewares/ValidateError');
+const productsModel = require('../models/productsModels');
 
 const salesServices = {
 
   async create(body) {
-    const validProduct = body.every(({ productId }) => productId);
-    if (!validProduct) { throw ValidateError(400, '"productId" is required'); }
-
+    const validProduct = body.map((productId) => (!!productId.productId));
+    if (validProduct.includes(false)) { throw ValidateError(400, '"productId" is required'); }
+    
     const quantField = body.every(({ quantity }) => quantity || quantity === 0);
     if (!quantField) { throw ValidateError(400, '"quantity" is required'); }
-
+    
     const quantLength = body.every(({ quantity }) => quantity > 0);
     if (!quantLength) {
       throw ValidateError(422, '"quantity" must be greater than or equal to 1');
     }
+    const pId = body.map(async ({ productId }) => productsModel.get(productId));
+    const resolves = await Promise.all(pId);
+    
+    if (resolves.includes(undefined)) throw ValidateError(404, 'Product not found');
+    
     const saleId = await salesModel.addSale();
-
-    const products = await salesModel.exists(saleId);
-    const validId = products.map((product) => product.id);
-    const bodyId = body.map((item) => item.productId);
-    const exists = bodyId.every((item) => validId.includes(item));
-    if (!exists) throw ValidateError(404, 'Product not found');
-
-    return { id: validId[validId.length - 1], itemsSold: body };
+    return { id: saleId, itemsSold: body };
   },
 
   async get() {
