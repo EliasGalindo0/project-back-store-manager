@@ -50,12 +50,6 @@ const salesServices = {
     await salesModel.delete(id);
   },
 
-  async checkIfExists(id) {
-    const exists = await salesModel.exists(id);
-    if (!exists) throw ValidateError(404, 'Product not found');
-    return exists;
-  },
-
 };
 
 module.exports = salesServices;

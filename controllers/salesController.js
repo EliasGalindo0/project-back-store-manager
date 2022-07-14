@@ -1,5 +1,5 @@
 // const ValidateError = require('../middlewares/ValidateError');
-const salesModel = require('../models/salesModel');
+const productsModel = require('../models/productsModels');
 const productsServices = require('../services/productsServices');
 const salesServices = require('../services/salesService');
 
@@ -19,6 +19,7 @@ const salesController = {
   async get(_req, res, next) {
     try {
       const sales = await salesServices.get();
+      await productsModel.exists();
       // if (!sales) throw ValidateError(404, 'Sale not found');
       res.status(200).json(sales);
     } catch (err) {
@@ -30,7 +31,7 @@ const salesController = {
   async getById(req, res, next) {
     try {
       const { id } = await productsServices.validateParamsId(req.params);
-      await salesModel.exists(id);
+      await productsModel.exists(id);
       const sale = await salesServices.getById(id);
       // if (!sale) throw ValidateError(404, 'Sale not found');
       res.status(200).json(sale);
@@ -43,7 +44,7 @@ const salesController = {
   async delete(req, res, next) {
     try {
       const { id } = await productsServices.validateParamsId(req.params);
-      await salesServices.exists(id);
+      await productsModel.exists(id);
       await salesServices.delete(id);
       res.sendStatus(204);
     } catch (err) {
