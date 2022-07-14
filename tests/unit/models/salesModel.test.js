@@ -2,6 +2,7 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const db = require('../../../models/connection');
+const productsModel = require('../../../models/productsModels');
 const salesModel = require('../../../models/salesModel');
 
 chai.use(chaiAsPromised);
@@ -56,12 +57,12 @@ describe('models/salesModel', () => {
   describe('exists', () => {
     it('deve disparar um erro caso não exista o id buscado', () => {
       sinon.stub(db, 'query').rejects();
-      chai.expect(salesModel.exists()).to.eventually.be.undefined;
+      chai.expect(productsModel.exists()).to.eventually.be.undefined;
     });
     
     it('deve retornar uma lista caso exista o id buscado', () => {
       sinon.stub(db, 'query').resolves([]);
-      chai.expect(salesModel.exists()).to.eventually.equal([]);
+      chai.expect(productsModel.exists()).to.eventually.equal([]);
     });
   });
   describe('addSale', () => {
