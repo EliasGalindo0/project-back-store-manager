@@ -29,17 +29,7 @@ describe('controller/productsController', () => {
       sinon.stub(productsServices, 'listProductById').rejects();
       chai.expect(productsController.listProductById({})).to.eventually.be.rejected;
     })
-
-    // it('deve retornar res.status 200 e res.json', async () => {
-    //   const res = makeRes();
-    //   sinon.stub().returns(res);
-    //   sinon.stub().returns();
-    //   sinon.stub(productsServices, 'validateParamsId').resolves();
-    //   sinon.stub(productsServices, 'listProductById').resolves();
-    //   await productsController.listProductById({}, res)
-    //   chai.expect(res.status.getCall(0).args[0]).to.equal(200);
-    //   chai.expect(res.json.getCall(0).args[0]).to.deep.equal({ });
-    // })
+    
   });
 
   describe('addProduct', () => {

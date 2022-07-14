@@ -2,19 +2,6 @@ const db = require('./connection');
 
 const salesModel = {
 
-  // async exists(id) {
-  //   console.log(id.toString().split(','));
-  //   const sql = `
-  //     SELECT * 
-  //     FROM StoreManager.products
-  //     WHERE id = 
-  //     IN (?)
-  //   `;
-  //   const [[exists]] = await db.query(sql, [id]);
-  //   // console.log(exists);
-  //   return !!exists;
-  // },
-
   async addSaleProduct(saleId, productId, quantity) {
     const sql = `
     INSERT INTO StoreManager.sales_products (sale_id, product_id, quantity) VALUES (?, ?, ?);

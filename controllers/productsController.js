@@ -1,3 +1,4 @@
+const productsModel = require('../models/productsModels');
 const productsServices = require('../services/productsServices');
 
 const productsController = {
@@ -25,7 +26,7 @@ const productsController = {
   async remove(req, res, next) {
     try {
       const { id } = await productsServices.validateParamsId(req.params);
-      await productsServices.checkIfExists(id);
+      await productsModel.exists(id);
       await productsServices.remove(id);
       return res.sendStatus(204);
     } catch (err) {

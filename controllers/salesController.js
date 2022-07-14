@@ -20,7 +20,6 @@ const salesController = {
     try {
       const sales = await salesServices.get();
       await productsModel.exists();
-      // if (!sales) throw ValidateError(404, 'Sale not found');
       res.status(200).json(sales);
     } catch (err) {
       return err.message
@@ -33,7 +32,6 @@ const salesController = {
       const { id } = await productsServices.validateParamsId(req.params);
       await productsModel.exists(id);
       const sale = await salesServices.getById(id);
-      // if (!sale) throw ValidateError(404, 'Sale not found');
       res.status(200).json(sale);
     } catch (err) {
       return err.message
