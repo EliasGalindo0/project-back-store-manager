@@ -3,11 +3,12 @@ const db = require('./connection');
 const productsModel = {
   async exists(id) {
     const sql = `
-      SELECT id 
+      SELECT * 
       FROM StoreManager.products
+      WHERE id = ?
     `;
-    const [exists] = await db.query(sql, [id]);
-    return exists;
+    const [[exists]] = await db.query(sql, [id]);
+    return !!exists;
   },
 
   async list() {
