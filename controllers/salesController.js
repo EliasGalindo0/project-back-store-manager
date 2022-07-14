@@ -19,7 +19,7 @@ const salesController = {
   async get(_req, res, next) {
     try {
       const sales = await salesServices.get();
-      await productsModel.exists();
+      await salesServices.get();
       res.status(200).json(sales);
     } catch (err) {
       return err.message
@@ -42,7 +42,7 @@ const salesController = {
   async delete(req, res, next) {
     try {
       const { id } = await productsServices.validateParamsId(req.params);
-      await productsModel.exists(id);
+      await salesServices.getById(id);
       await salesServices.delete(id);
       res.sendStatus(204);
     } catch (err) {
