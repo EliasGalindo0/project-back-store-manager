@@ -16,10 +16,10 @@ const productsController = {
   },
 
   async addProduct(req, res) {
-    const data = await productsServices.validateBodyAdd(req.body);
-    const id = await productsServices.addProduct(data);
-    const product = await productsServices.listProductById(id);
-    res.status(201).json(product);
+      const data = await productsServices.validateBodyAdd(req.body);
+      const id = await productsServices.addProduct(data);
+      const product = await productsServices.listProductById(id);
+      res.status(201).json(product);
   },
 
   async remove(req, res, next) {
@@ -33,6 +33,16 @@ const productsController = {
         ? res.status(err.status).json({ message: err.message }) : next(err);
     }
     },
+  
+  async update(req, res) {
+    const { id } = req.params;
+    const { name } = await productsServices.validateBodyAdd(req.body);
+    const product = await productsServices.update(name, id);
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+    return res.status(200).json(product);
+  },
 
   };
 module.exports = productsController;

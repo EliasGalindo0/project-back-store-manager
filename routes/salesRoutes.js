@@ -3,10 +3,10 @@ const salesController = require('../controllers/salesController');
 
 const salesRoutes = Router();
 
+salesRoutes.delete('/:id', salesController.delete);
+salesRoutes.get('/:id', salesController.getById);
+salesRoutes.put('/:id', salesController.put);
 salesRoutes.get('/', salesController.get);
 salesRoutes.post('/', salesController.add);
-salesRoutes.get('/:id', salesController.getById);
-salesRoutes.delete('/:id', salesController.delete);
-salesRoutes.put('/:id', salesController.put);
 
 module.exports = salesRoutes;

@@ -28,6 +28,7 @@ const productsServices = {
 
   async addProduct(data) {
     const { ...insertId } = data;
+    if (!data) throw ValidateError(404, 'Product not found');
     const id = await productsModel.add(insertId);
     return id;
   },
@@ -43,6 +44,10 @@ const productsServices = {
     return result;
   },
 
+  async update(name, id) {
+    const product = await productsModel.update(name, id);
+      return product;
+    },
 };
 
 module.exports = productsServices;

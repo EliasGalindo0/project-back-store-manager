@@ -1,12 +1,12 @@
 const db = require('./connection');
 
 const productsModel = {
-  async exists() {
+  async exists(id) {
     const sql = `
       SELECT id 
       FROM StoreManager.products
     `;
-    const [exists] = await db.query(sql);
+    const [exists] = await db.query(sql, [id]);
     return exists;
   },
 
@@ -33,6 +33,16 @@ const productsModel = {
     const result = db.query(sql, Number(id));
     return result;
   },
+
+  async update(nameRequest, idRequest) {
+      const sql = `UPDATE StoreManager.products SET name =
+  ? WHERE id = ?`;
+    const [data] = await db.query(sql, [nameRequest, idRequest]);
+    if (data.affectedRows >= 1) {
+      return { id: idRequest, name: nameRequest };
+    }
+    return false;
+    },
 
 };
 

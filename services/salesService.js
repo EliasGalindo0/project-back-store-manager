@@ -1,13 +1,9 @@
 const salesModel = require('../models/salesModel');
 const ValidateError = require('../middlewares/ValidateError');
-// const errorValidation = require('../middlewares/errorValidation');
 
 const salesServices = {
 
   async create(body) {
-    // const { error } = schema.validate(body);
-    // if (error) throw ValidateError(error.details, error.message);
-
     const validProduct = body.every(({ productId }) => productId);
     if (!validProduct) { throw ValidateError(400, '"productId" is required'); }
 
