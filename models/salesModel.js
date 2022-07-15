@@ -43,13 +43,19 @@ const salesModel = {
     await db.query(query, [id]);
   },
   
-  async put({ id, productId, quantity }) {
+  async put(id, body) {
     const query = `UPDATE StoreManager.sales_products
       SET quantity = ?
       WHERE sale_id = ?
       AND product_id = ?;`;
-    await db.query(query, [quantity, id, productId]);
-    return { productId, quantity };
+        
+    const response = Promise.all(body.map((curr) => 
+      db.query(query, [curr.quantity, id, curr.productId])));
+
+    const [[{ affectedRows }]] = await response;
+    
+    console.log(affectedRows);
+    return affectedRows;
   },
 
 };

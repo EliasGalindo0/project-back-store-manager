@@ -50,10 +50,31 @@ const salesServices = {
     await salesModel.delete(id);
   },
 
-  async put({ id, productId, quantity }) {
-    const sale = await salesModel.put({ id, productId, quantity });
-    if (!sale) throw ValidateError(404, 'Sale not found');
-      return sale;
+  async put(id, body) {
+    const validProduct = body.every(({ productId }) => productId);
+    if (!validProduct) { throw ValidateError(400, '"productId" is required'); }
+
+    const quantField = body.every(({ quantity }) => quantity || quantity === 0);
+    if (!quantField) { throw ValidateError(400, '"quantity" is required'); }
+
+    const quantLength = body.every(({ quantity }) => quantity > 0);
+    if (!quantLength) {
+      throw ValidateError(422, '"quantity" must be greater than or equal to 1');
+    }
+
+    const pId = body.map(async ({ productId }) => productsModel.get(productId));
+    const resolves = await Promise.all(pId);
+
+    if (resolves.includes(undefined)) throw ValidateError(404, 'Product not found');
+
+    await salesModel.put(id, body);
+    return { saleId: id, itemsUpdated: body };
+  },
+
+  async checkIfExists(id) {
+    const exist = await productsModel.exists(id);
+    if (!exist) throw ValidateError(404, 'Sale not found');
+    return exist;
   },
 
 };

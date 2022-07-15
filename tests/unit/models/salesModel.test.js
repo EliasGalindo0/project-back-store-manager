@@ -71,4 +71,22 @@ describe('models/salesModel', () => {
       chai.expect(salesModel.addSale(0)).to.eventually.deep.equal(0);
     });
   });
+  describe('delete', () => {
+    it('deve disparar um erro caso não exista o id buscado', () => {
+      sinon.stub(db, 'query').rejects();
+      chai.expect(salesModel.delete()).to.eventually.be.undefined;
+      });
+    });
+
+    describe('put', () => {
+      it('deve disparar um erro caso não exista o id buscado', () => {
+        sinon.stub(db, 'query').rejects();
+        chai.expect(salesModel.put()).to.eventually.be.undefined;
+      });
+    
+      it('deve alterar uma venda', () => {
+        sinon.stub(db, 'query').resolves({});
+        chai.expect(salesModel.put()).to.eventually.deep.equal({});
+      });
+    });
 });

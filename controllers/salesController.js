@@ -53,11 +53,11 @@ const salesController = {
 
   async put(req, res, next) {
     try {
-      const { id } = req.params;
-      const { body } = req.body;
-      await salesServices.getById(id);
-      const sale = await salesServices.put(body, id);
-      res.status(200).json(sale);
+      const { id } = await productsServices.validateParamsId(req.params);
+      const { body } = req;
+      await salesServices.checkIfExists(id);
+      const update = await salesServices.put(id, body);
+      return res.status(200).json(update);
     } catch (err) {
       return err.message
         ? res.status(err.status).json({ message: err.message }) : next(err);
