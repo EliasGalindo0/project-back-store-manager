@@ -43,7 +43,18 @@ const productsModel = {
       return { id: idRequest, name: nameRequest };
     }
     return false;
-    },
+  },
+  
+  async getByName(q) {
+    const sql = `
+      SELECT * 
+      FROM StoreManager.products
+      WHERE name
+      LIKE CONCAT ('%', ?, '%')
+    `;
+    const [result] = await db.query(sql, [q]);
+    return result;
+  },
 
 };
 

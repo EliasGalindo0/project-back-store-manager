@@ -44,5 +44,16 @@ const productsController = {
     return res.status(200).json(product);
   },
 
+  async getByName(req, res, next) {
+    try {
+      const { q } = req.query;
+      const product = await productsServices.getByName(q);
+      return res.status(200).json(product);
+    } catch (err) {
+      return err.message
+        ? res.status(err.status).json({ message: err.message }) : next(err);
+    }
+  },
+
   };
 module.exports = productsController;

@@ -47,7 +47,13 @@ const productsServices = {
   async update(name, id) {
     const product = await productsModel.update(name, id);
       return product;
-    },
+  },
+  
+  async getByName(q) {
+    const product = await productsModel.getByName(q);
+    return product;
+  },
+
 };
 
 module.exports = productsServices;
