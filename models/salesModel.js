@@ -54,7 +54,6 @@ const salesModel = {
 
     const [[{ affectedRows }]] = await response;
     
-    console.log(affectedRows);
     return affectedRows;
   },
 
